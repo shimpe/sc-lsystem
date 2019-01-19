@@ -6,7 +6,7 @@ var lsys = LSystem(
     axiom:"FX",
     constants:Set[],
     rules:(\X : "X+YF+",
-           \Y : "-FX-Y"));
+        \Y : "-FX-Y"));
 var interp = LSystemInterpreter(
     lsystem:lsys,
     actions:(
@@ -48,7 +48,7 @@ view.drawFunc_({
             \dir : 0@1.neg,
             \pos : (win.view.bounds.width/2)@(win.view.bounds.height/5),
             \len : 3,
-            \angle:90 ) );
+            \angle: 90 ) );
         Pen.width = 2;
         Pen.strokeColor_(Color.black);
         Pen.fillColor_(Color.black);
