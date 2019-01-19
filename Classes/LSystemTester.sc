@@ -44,6 +44,17 @@ CalculateTester : UnitTest {
         this.assertEquals(p.length(), 17);
         this.assertEquals(p.getCalculatedString(), "[Y^X^Y]+Y+[Y^X^Y]");
     }
+
+    test_calculate2 {
+        var p = LSystem.new(iterations:1, axiom:"FX", rules:[\X:"X+YF+",\Y:"-FX-Y"]);
+        this.assertEquals(p.getCalculatedString(), "FX+YF+");
+    }
+
+    test_calculate3 {
+        var p = LSystem.new(iterations:2, axiom:"X", rules:[\X : "Y-X-Y", \Y : "Z"]);
+        var str = p.getCalculatedString; // Z-Y-X-Y-Z
+        this.assertEquals(p.getCalculatedString(), "Z-Y-X-Y-Z");
+    }
 }
 
 LSystemTester {

@@ -1,18 +1,21 @@
 LSystemInterpreter {
     var <>lsystem;
     var <>actions;
+    var <>globalstate;
 
     *new {
-        | lsystem = nil, actions = nil|
-        ^super.new.init(lsystem, actions);
+        | lsystem = nil, actions = nil, globalstate = nil|
+        ^super.new.init(lsystem, actions, globalstate);
     }
 
     init {
-        | lsystem = nil, actions = nil |
+        | lsystem = nil, actions = nil, globalstate = nil |
         this.lsystem = lsystem;
         if (actions.isNil) {
-            this.actions = ();
-        }
+            actions = ();
+        };
+        this.actions = actions;
+        this.globalstate = globalstate;
     }
 
     setLSystem {
@@ -37,6 +40,15 @@ LSystemInterpreter {
     action {
         | symbol |
         ^this.actions[symbol.asSymbol][0];
+    }
+
+    setGlobalState {
+        | globalstate |
+        this.globalstate = globalstate;
+    }
+
+    globalState {
+        ^this.globalstate;
     }
 
     updateAction {
@@ -73,10 +85,12 @@ LSystemInterpreter {
             var symbol = st.asSymbol;
             if (this.actions[symbol].notNil) {
                 var oldstateobject = this.state(symbol);
-                if (oldstateobject.notNil) {
+                var gs = this.globalstate;
+                if (oldstateobject.notNil || gs.notNil) {
                     // action with stateobject: call the action and update the stateobject
-                    var newstateobject = this.action(symbol).value(oldstateobject);
-                    this.updateState(symbol, newstateobject);
+                    var newstateobject = this.action(symbol).value(gs, oldstateobject);
+                    this.updateState(symbol, newstateobject[1]);
+                    this.globalstate = newstateobject[0];
                 } {
                     // action without stateobject: just call the action
                     this.action(symbol).value();

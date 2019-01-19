@@ -91,18 +91,33 @@ LSystem {
         this.calculatedString = this.system[\axiom];
         this.iterations().do({
             | i |
-            var newString;
-            this.calculatedString.do({
+            var newString = "";
+            //i.debug("iteration");
+            //this.calculatedString.debug("currently calculated string");
+            this.calculatedString.do
+            ({
                 | c |
-                this.system[\rules].pairsDo({
+                var ruleFound = false;
+                //this.calculatedString.debug("str");
+                //c.debug("character");
+                this.system[\rules].pairsDo
+                ({
                     | key, value |
-
-                    if (c.asSymbol == key.asSymbol) {
+                    //("does rule"+key+" match character"+c+" ?").postln;
+                    if (ruleFound.not && (c.asSymbol == key.asSymbol))
+                    {
+                        //"***MATCH***".postln;
                         newString = newString ++ value;
-                    } {
-                        newString = newString ++ c;
+                        //newString.debug("new string 1");
+                        ruleFound = true;
                     };
                 });
+                if (ruleFound.not)
+                {
+                    //("no ***rules*** applicable for character" + c).postln;
+                    newString = newString ++ c;
+                    //newString.debug("new string 2");
+                };
             });
             this.calculatedString = newString;
         });
