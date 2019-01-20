@@ -19,8 +19,7 @@ s.waitForBoot({
             // whenever you encounter an F, extend the list of played notes
             'F' : [{ | glob, loc |
                 // extend list notes being played (using some randomness :) )
-                "add new note".postln;
-                glob[\patternnotes] = glob[\patternnotes].add(glob[\acceptablenotes].choose);
+                glob[\patternnotes] = glob[\patternnotes].add(glob[\acceptablenotes].choose.debug("add new note"));
 
                 // always return state at the end
                 [glob, loc];
