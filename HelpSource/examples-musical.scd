@@ -27,15 +27,14 @@ s.waitForBoot({
             }, nil],
             // whenever you encounter a +, transpose up
             '+': [{ | glob, loc |
-                "transpose up".postln;
-                glob[\transpose] = (glob[\transpose] + [1,2,3,4].choose).clip(-12,12);
+                glob[\transpose] = (glob[\transpose] + [1,2,3,4].choose.debug("transpose up")).clip(-12,12);
                 // always return state at the end
                 [glob, loc];
             }, nil],
             // whenever you encounter a -, transpose down
             '-': [{ | glob, loc |
                 "transpose down".postln;
-                glob[\transpose] = (glob[\transpose] - [1,2,3,4].choose).clip(-12, 12);
+                glob[\transpose] = (glob[\transpose] - [1,2,3,4].choose.debug("transpose down")).clip(-12, 12);
                 // always return state at the end
                 [glob, loc];
             }, nil],
@@ -53,8 +52,7 @@ s.waitForBoot({
             }, nil],
             // whenever you encounter a Y, change tempo (randomly) )
             'Y' : [{ | glob, loc |
-                "change tempo".postln;
-                glob[\tempo] = (glob[\tempo] * [0.3, 2, 0.5, 3].choose).clip(8,32);
+                glob[\tempo] = (glob[\tempo] * [0.3, 2, 0.5, 3].choose.debug("tempo factor")).clip(8,32);
                 // always return state at the end
                 [glob, loc];
             }, nil],
