@@ -2,7 +2,7 @@
 s.waitForBoot({
     var player;
     var lsys = LSystem(
-        iterations:8,
+        iterations:4,
         axiom:"FX",
         constants:Set[],
         rules:(\X : "X+YF+",
@@ -16,7 +16,7 @@ s.waitForBoot({
             \tempo : 16,
         ),
         actions:(
-            // whenever you encounter an F, extend the pool of acceptable notes
+            // whenever you encounter an F, extend the list of played notes
             'F' : [{ | glob, loc |
                 // extend list notes being played (using some randomness :) )
                 "add new note".postln;
@@ -28,14 +28,14 @@ s.waitForBoot({
             // whenever you encounter a +, transpose up
             '+': [{ | glob, loc |
                 "transpose up".postln;
-                glob[\transpose] = (glob[\transpose] + [1,2].choose).clip(-12,12);
+                glob[\transpose] = (glob[\transpose] + [1,2,3,4].choose).clip(-12,12);
                 // always return state at the end
                 [glob, loc];
             }, nil],
             // whenever you encounter a -, transpose down
             '-': [{ | glob, loc |
                 "transpose down".postln;
-                glob[\transpose] = (glob[\transpose] - [1,2].choose).clip(-12, 12);
+                glob[\transpose] = (glob[\transpose] - [1,2,3,4].choose).clip(-12, 12);
                 // always return state at the end
                 [glob, loc];
             }, nil],
@@ -95,6 +95,7 @@ s.waitForBoot({
     s.sync;
 
     fork {
+        var skipfirstidx = 10; // increase to skip more steps at the beginning
         var sz = lsys.getCalculatedString.size();
         lsys.getCalculatedString.do({
             | chr, idx |
@@ -102,11 +103,13 @@ s.waitForBoot({
             var transposedpattern;
             var transposition;
             var transposition2;
-            ("*** PART" + (idx+1) + " OF" + sz + "***").postln;
+            ("*** PART" + (idx+1) + "OF" + sz + "***").postln;
             interp.step(idx);
             interp2.step(idx);
             // start playing from step 10
-            if (idx > 10) {
+            if (idx > skipfirstidx) {
+                var repeats = inf;
+                if (idx == (sz-1)) { repeats = 3; }; // don't repeat last pattern indefinitely
                 transposition = interp.globalState()[\transpose].debug("transpose");
                 transposition2 = interp2.globalState()[\transpose].debug("transpose2");
                 pattern = Pn(
@@ -114,25 +117,27 @@ s.waitForBoot({
                         Padd(\midinote, Pfunc({transposition}),
                             Panola.new(
                                 notation:interp.globalState()[\patternnotes].join(" ").debug("notes1"),
-                                dur_default:interp.globalState()[\tempo]).asPbind(\kalimba)
+                                dur_default:interp.globalState()[\tempo]
+                            ).asPbind(\kalimba)
                         ),
                         Padd(\midinote, Pfunc({transposition2}),
                             Panola.new(
                                 notation:interp2.globalState()[\patternnotes].join(" ").debug("notes2"),
-                                dur_default:interp2.globalState()[\tempo],
+                                dur_default:interp2.globalState()[\tempo]/2,
                                 vol_default:0.1
                             ).asPbind(\flute),
                         )
                     ]),
-                    inf);
+                    repeats);
                 if (player.notNil) { player.stop; };
                 player = pattern.play();
                 1.wait;
+                if (idx == (sz-1)) {
+                    "*** ABOUT TO FINISH ***".postln;
+                };
             }
         });
     }
 });
 )
 
-
-~player.stop();
