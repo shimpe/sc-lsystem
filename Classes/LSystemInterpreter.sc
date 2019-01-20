@@ -21,6 +21,7 @@ LSystemInterpreter {
     setLSystem {
         | lsys |
         this.lsystem = lsys;
+        ^this;
     }
 
     lSystem {
@@ -30,11 +31,13 @@ LSystemInterpreter {
     setActions {
         | actions |
         this.actions = actions;
+        ^this;
     }
 
     addAction {
         | symbol, action, stateobject=nil |
         this.actions[symbol.asSymbol] = [action, stateobject];
+        ^this;
     }
 
     action {
@@ -45,6 +48,7 @@ LSystemInterpreter {
     setGlobalState {
         | globalstate |
         this.globalstate = globalstate;
+        ^this;
     }
 
     globalState {
@@ -57,6 +61,7 @@ LSystemInterpreter {
             this.actions[symbol.asSymbol] = [nil, nil]
         };
         this.actions[symbol.asSymbol][0] = action;
+        ^this;
     }
 
     updateState {
@@ -65,6 +70,7 @@ LSystemInterpreter {
             this.actions[symbol.asSymbol] = [nil, nil]
         };
         this.actions[symbol.asSymbol][1] = state;
+        ^this;
     }
 
     state {
@@ -97,6 +103,7 @@ LSystemInterpreter {
                 };
             };
         };
+        ^this;
     }
 
     stepRange {
@@ -107,11 +114,13 @@ LSystemInterpreter {
             | st |
             this.step(st);
         });
+        ^this;
     }
 
     run {
         // evaluate all steps
         var str = this.lsystem.getCalculatedString ?? "";
         this.stepRange(0, str.size);
+        ^this;
     }
 }

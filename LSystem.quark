@@ -1,0 +1,10 @@
+(
+  name: "LSystem",
+  summary: "Quark to generate and interpret Lindenmayer Systems",
+  version: "0.0.1",
+  schelp: "LSystem.schelp",
+  dependencies: ["https://github.com/shimpe/panola"],
+  license: "GPL",
+  copyright: "Stefaan Himpe, 2019"
+)
+

@@ -1,0 +1,165 @@
+TITLE:: LSystem
+summary:: (put short description here)
+categories:: Undocumented classes
+related:: Classes/LSystemInterpreter, Classes/LSystemTester
+
+DESCRIPTION::
+Class to hold a Lindenmayer System specification consisting of an Axiom, Rules and Constants.
+
+
+CLASSMETHODS::
+
+METHOD:: new
+Generates a new Lindenmayer System
+
+ARGUMENT:: iterations
+Sets up how many times the rules have to be applied to get the final string.
+
+ARGUMENT:: axiom
+The initial string on which the rules will be applied.
+
+ARGUMENT:: constants
+A set of constants. Example: Set[\X, \Y]
+Note that by registering a symbol as a constant, you can prevent it
+from being interpreted by an LSystemInterpreter, even if the interpreter defines
+actions for the symbol.
+
+ARGUMENT:: rules
+An event containing rules. Rules map symbols to strings.
+Example: (\X : "YXY", \Y:"YY")
+
+returns:: (describe returnvalue here)
+A new lindenmayer system
+
+INSTANCEMETHODS::
+
+METHOD:: isConstant
+returns true of the argment was registered as a constant
+
+ARGUMENT:: c
+a symbol of which you want to check if it was registered as a constant
+
+returns:: true if c is a constant
+
+METHOD:: axiom
+get the configured axiom
+
+returns:: the axiom
+
+METHOD:: getCalculatedString
+returns the string resulting from applying the rules for iterations times
+
+returns:: the resulting string after iterated rule application
+
+METHOD:: rules
+returns the configured rules
+
+returns:: the configured rules
+
+METHOD:: pr_recalculate
+actually performs the string substitutions starting from the axiom and applying the rules
+
+returns:: calculated string
+
+METHOD:: cacheValid
+returns true if the calculated string is up to date and can be retrieved without recalculation
+(normally you never need to bother with this, as it's handled automatically behind the scenes)
+
+returns:: true if the calculated string is up to date and can be retrieved without recalculation
+
+METHOD:: noOfIterations
+number of times the rules will be applied
+
+returns:: number of times the rules will be applied
+
+METHOD:: setNoOfIterations
+sets the number of iterations the rules will be applied. Changing this number will cause a recalculation of the final string when it's requested.
+
+ARGUMENT:: i
+the desired number of iterations
+
+returns:: this
+
+METHOD:: iterations
+returns the configured number iterations
+
+returns:: configured number of iterations
+
+METHOD:: calculatedString
+returns the calculatedString. Prefer using getCalculatedString instead to ensure automatic recalculation if cache is invalid.
+
+returns:: calculated string (no automatic recalculation done)
+
+METHOD:: system
+event containing all of the axiom, rules and constants that make up the Lindenmayer system.
+
+returns:: event containing all of the axiom, rules and constants that make up the Lindenmayer system.
+
+METHOD:: init
+initialize Lindenmayer system
+
+ARGUMENT:: iterations
+number of iterations
+
+ARGUMENT:: axiom
+axiom
+
+ARGUMENT:: constants
+constants (Set[])
+
+ARGUMENT:: rules
+rules mapping symbols to strings, e.g. (\X : "YZ", \Y:"XX", \Z:"Y")
+
+returns:: lindenmayer system
+
+METHOD:: setAxiom
+set the axiom
+
+ARGUMENT:: axiom
+axiom
+
+returns:: this
+
+METHOD:: addConstant
+register a symbol as a constant. Constants will prevent LSystemInterpreter to interpret the symbol, even
+if an action was defined to handle it.
+
+ARGUMENT:: c
+symbol
+
+returns:: this
+
+METHOD:: addRule
+adds a substitution rule
+
+ARGUMENT:: from
+symbol
+
+ARGUMENT:: to
+string
+
+returns:: this
+
+METHOD:: constants
+returns the set of configured constants
+
+returns:: set of constants
+
+METHOD:: length
+get the length of the resulting string
+
+returns:: length of the resulting string
+
+
+EXAMPLES::
+
+code::
+(
+var p = LSystem.new(iterations:2, axiom:"X+Y+X", constants:Set[\Y], rules:(\X : "[Y^X^Y]"));
+p.getCalculatedString().postln; // [Y^[Y^X^Y]^Y]+Y+[Y^[Y^X^Y]^Y]
+p.length().postln; // 29
+p.setNoOfIterations(1); // will cause recalculation as soon as needed
+p.length().postln; // 17
+p.getCalculatedString() // [Y^X^Y]+Y+[Y^X^Y];
+)
+::

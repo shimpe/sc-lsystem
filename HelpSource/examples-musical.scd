@@ -92,7 +92,7 @@ s.waitForBoot({
     s.sync;
 
     fork {
-        var skipfirstidx = 10; // increase to skip more steps at the beginning
+        var skipfirstidx = 0; // increase to skip more steps at the beginning
         var sz = lsys.getCalculatedString.size();
         lsys.getCalculatedString.do({
             | chr, idx |
@@ -103,7 +103,7 @@ s.waitForBoot({
             ("*** PART" + (idx+1) + "OF" + sz + "***").postln;
             interp.step(idx);
             interp2.step(idx);
-            // start playing from step 10
+            // start playing from step skipfirstidx
             if (idx > skipfirstidx) {
                 var repeats = inf;
                 if (idx == (sz-1)) { repeats = 3; }; // don't repeat last pattern indefinitely
@@ -121,6 +121,7 @@ s.waitForBoot({
                             Panola.new(
                                 notation:interp2.globalState()[\patternnotes].join(" ").debug("notes2"),
                                 dur_default:interp2.globalState()[\tempo]/2,
+                                playdur_default:1,
                                 vol_default:0.1
                             ).asPbind(\flute),
                         )

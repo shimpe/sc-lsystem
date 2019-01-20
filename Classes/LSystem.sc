@@ -26,6 +26,7 @@ LSystem {
             this.cacheValid = false;
             this.system[\iterations] = i;
         }
+        ^this;
     }
 
     setAxiom {
@@ -36,6 +37,7 @@ LSystem {
                 this.system[\axiom] = axiom;
             }
         }
+        ^this;
     }
 
     addConstant {
@@ -44,12 +46,14 @@ LSystem {
             this.cacheValid = false;
             this.system[\constants].add(c);
         }
+        ^this;
     }
 
     addRule {
         | from, to |
         this.cacheValid = false;
         this.system[\rules][from] = to;
+        ^this;
     }
 
     iterations {
@@ -116,11 +120,12 @@ LSystem {
                 {
                     //("no ***rules*** applicable for character" + c).postln;
                     newString = newString ++ c;
-                    //newString.debug("new string 2");
+                    //lnewString.debug("new string 2");
                 };
             });
             this.calculatedString = newString;
         });
         this.cacheValid = true;
+        ^this;
     }
 }
